@@ -1,4 +1,3 @@
-import './style.css'
 import {
   updatedAt, tiers, freeModels, goModels, consoleModels,
   consoleFamilies, deprecatedModels, sources,
