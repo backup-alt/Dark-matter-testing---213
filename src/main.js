@@ -15,19 +15,20 @@ const goPaidCount = goModels.filter((m) => m.family !== 'Free').length
 app.innerHTML = `
   <header class="site">
     <div class="wrap site-inner">
-      <a class="brand" href="#top"><span class="dot">▍</span>opencode<span style="color:var(--faint)">/models</span></a>
+      <a class="brand" href="#top"><span class="logo-mark" aria-hidden="true"></span>opencode<span class="brand-sub">/models</span></a>
       <nav class="tier-nav">
-        <a href="#free">Free</a>
-        <a href="#go">Go</a>
-        <a href="#console">Pay-as-you-go</a>
-        <a href="#byok">BYOK</a>
-        <a href="#deprecated">Deprecated</a>
+        <a href="#free"><span class="idx">[01]</span>Free</a>
+        <a href="#go"><span class="idx">[02]</span>Go</a>
+        <a href="#console"><span class="idx">[03]</span>Pay-as-you-go</a>
+        <a href="#byok"><span class="idx">[04]</span>BYOK</a>
+        <a href="#deprecated"><span class="idx">[05]</span>Deprecated</a>
       </nav>
     </div>
   </header>
 
   <div class="wrap" id="top">
     <div class="hero">
+      <div class="term"><span class="prompt">$</span><span class="cmd">opencode models --all-tiers</span><span class="cursor" aria-hidden="true"></span></div>
       <h1>Every OpenCode model.<br /><span class="accent">All tiers, one catalog.</span></h1>
       <p>Limited-time free models, Go subscriptions, Console pay-as-you-go pricing and bring-your-own-key providers — everything you can run through OpenCode, in one place.</p>
       <div class="stats">
@@ -41,7 +42,7 @@ app.innerHTML = `
 
     <section id="tiers">
       <div class="sec-head">
-        <span class="kicker">Access tiers</span>
+        <span class="kicker">[01] Access tiers</span>
         <h2>Six ways to run a model</h2>
         <p>OpenCode is provider-agnostic. Pick a tier below — or mix them. When a paid limit runs out, the free models are always there.</p>
       </div>
@@ -50,7 +51,7 @@ app.innerHTML = `
           <div class="tier-card">
             <div class="row">
               <h3>${esc(t.name)}</h3>
-              <span class="price" style="color:var(--${t.accent === 'free' ? 'green' : t.accent === 'console' ? 'blue' : t.accent === 'byok' ? 'purple' : 'orange'})">${esc(t.price)}</span>
+              <span class="price" style="color:var(--${t.accent === 'free' ? 'green' : t.accent === 'console' ? 'blue' : t.accent === 'byok' ? 'amber' : 'orange'})">${esc(t.price)}</span>
             </div>
             <span class="badge ${t.accent}">${esc(t.badge)}</span>
             <p class="desc">${esc(t.desc)}</p>
@@ -62,7 +63,7 @@ app.innerHTML = `
 
     <section id="free">
       <div class="sec-head">
-        <span class="kicker">Tier 1 · Free</span>
+        <span class="kicker">[02] Tier 1 · Free</span>
         <h2>Limited-time free models</h2>
         <p>${freeModels.length} models currently free on OpenCode, including stealth models and NVIDIA trial endpoints. Privacy terms vary — check the notes. Hide them all with <span class="mono" style="color:var(--text)">OPENCODE_DISABLE_FREE_MODELS=1</span>.</p>
       </div>
@@ -93,7 +94,7 @@ app.innerHTML = `
 
     <section id="go">
       <div class="sec-head">
-        <span class="kicker">Tier 2 · Subscription</span>
+        <span class="kicker">[03] Tier 2 · Subscription</span>
         <h2>OpenCode Go — Go, Go Plus &amp; Go Teams</h2>
         <p>Fixed monthly price, generous usage on ${goPaidCount} curated models plus ${goModels.length - goPaidCount} free ones. Limits are monthly dollar allowances per model, metered in 5-hour (20%), weekly (50%) and monthly (100%) windows. Toggle a plan to compare limits.</p>
       </div>
@@ -110,7 +111,7 @@ app.innerHTML = `
 
     <section id="console">
       <div class="sec-head">
-        <span class="kicker">Tier 3 · Pay-as-you-go</span>
+        <span class="kicker">[04] Tier 3 · Pay-as-you-go</span>
         <h2>Console — pay per request</h2>
         <p>Add credits to your OpenCode Console account and pay per 1M tokens, sold at cost (a 4.6% + $0.31 processing fee applies to credit purchases). Every text model also works through the other APIs — Console translates automatically. Includes the free models above.</p>
       </div>
@@ -124,7 +125,7 @@ app.innerHTML = `
 
     <section id="byok">
       <div class="sec-head">
-        <span class="kicker">Tier 4 · Bring your own key</span>
+        <span class="kicker">[05] Tier 4 · Bring your own key</span>
         <h2>Any provider, any model</h2>
         <p>Console and Go are optional. OpenCode connects directly to any provider with your own API key, including:</p>
       </div>
@@ -147,7 +148,7 @@ app.innerHTML = `
 
     <section id="deprecated">
       <div class="sec-head">
-        <span class="kicker">Retired</span>
+        <span class="kicker">[06] Retired</span>
         <h2>Deprecated models</h2>
         <p>Models that have been removed or have scheduled removal dates. Listed for reference.</p>
       </div>
@@ -161,7 +162,7 @@ app.innerHTML = `
     <footer class="site">
       <div class="footer-grid">
         <div>
-          <a class="brand" href="#top"><span class="dot">▍</span>opencode<span style="color:var(--faint)">/models</span></a>
+          <a class="brand" href="#top"><span class="logo-mark" aria-hidden="true"></span>opencode<span class="brand-sub">/models</span></a>
           <p>Unofficial catalog. Data transcribed from the official OpenCode documentation on ${esc(updatedAt)} — pricing and model lists change often, so always confirm at the source. Questions → help@anoma.ly.</p>
         </div>
         <div class="links">
