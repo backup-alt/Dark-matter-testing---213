@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenCode Models Hub — Free, Paid &amp; Accessible Models Across All Tiers</title>
+<meta name="description" content="A complete, searchable catalog of every model available on OpenCode: limited-time free models, OpenCode Go subscription tiers, Console pay-as-you-go pricing, and bring-your-own-key access.">
+<style>
+  :root{
+    --bg:#0a0c10;
+    --bg-soft:#10141b;
+    --panel:#141923;
+    --panel-2:#1a2030;
+    --border:#232b3d;
+    --border-soft:#1c2333;
+    --text:#e8ecf4;
+    --muted:#8b95a8;
+    --accent:#ff5d1f;
+    --accent-soft:rgba(255,93,31,.12);
+    --green:#3ecf8e;
+    --green-soft:rgba(62,207,142,.12);
+    --blue:#5b8def;
+    --blue-soft:rgba(91,141,239,.12);
+    --purple:#a78bfa;
+    --purple-soft:rgba(167,139,250,.12);
+    --gold:#f5c04e;
+    --gold-soft:rgba(245,192,78,.12);
+    --red:#f0705f;
+    --red-soft:rgba(240,112,95,.12);
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:76px}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,12,16,.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .nav{display:flex;align-items:center;gap:20px;height:64px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--text)}
+  .logo-mark{
+    width:28px;height:28px;border-radius:8px;
+    background:linear-gradient(135deg,var(--accent),#ff8a3d);
+    display:grid;place-items:center;font-weight:800;font-size:14px;color:#fff;
+  }
+  .nav-links{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+  .nav-links a{
+    color:var(--muted);font-size:13.5px;font-weight:500;
+    padding:7px 12px;border-radius:8px;transition:.15s;
+  }
+  .nav-links a:hover{color:var(--text);background:var(--panel);text-decoration:none}
+
+  .hero{
+    padding:72px 0 48px;
+    background:
+      radial-gradient(800px 400px at 15% -10%,rgba(255,93,31,.14),transparent),
+      radial-gradient(700px 350px at 85% -20%,rgba(91,141,239,.10),transparent);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:600;color:var(--accent);
+    background:var(--accent-soft);border:1px solid rgba(255,93,31,.3);
+    padding:5px 12px;border-radius:999px;margin-bottom:18px;
+  }
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  h1{font-size:clamp(30px,5vw,50px);line-height:1.12;letter-spacing:-.02em;font-weight:800}
+  h1 .grad{background:linear-gradient(90deg,var(--accent),#ffb35c);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--muted);max-width:720px;margin-top:16px;font-size:16.5px}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .stat{
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:12px;padding:12px 18px;min-width:130px;
+  }
+  .stat b{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .stat span{font-size:12px;color:var(--muted);font-weight:500}
+  .stat.f b{color:var(--green)} .stat.g b{color:var(--blue)} .stat.p b{color:var(--purple)} .stat.k b{color:var(--gold)}
+
+  .section{padding:56px 0}
+  .section-alt{background:var(--bg-soft);border-block:1px solid var(--border-soft)}
+  .sec-head{margin-bottom:26px}
+  .sec-tag{
+    font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    padding:4px 10px;border-radius:6px;display:inline-block;margin-bottom:10px;
+  }
+  .sec-tag.free{color:var(--green);background:var(--green-soft)}
+  .sec-tag.go{color:var(--blue);background:var(--blue-soft)}
+  .sec-tag.pay{color:var(--purple);background:var(--purple-soft)}
+  .sec-tag.byok{color:var(--gold);background:var(--gold-soft)}
+  h2{font-size:clamp(22px,3vw,30px);font-weight:750;letter-spacing:-.02em}
+  .sec-head p{color:var(--muted);max-width:760px;margin-top:8px;font-size:15px}
+
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px}
+  .tier{
+    background:var(--panel);border:1px solid var(--border);border-radius:16px;
+    padding:22px;position:relative;transition:.18s;
+  }
+  .tier:hover{transform:translateY(-3px);border-color:#2e3850}
+  .tier h3{font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px}
+  .tier .price{font-size:13px;font-weight:700;margin:6px 0 10px}
+  .tier ul{list-style:none;color:var(--muted);font-size:13.5px;display:grid;gap:7px}
+  .tier ul li::before{content:"→ ";color:var(--accent);font-weight:700}
+  .badge{
+    font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.03em;
+  }
+  .badge.free{color:var(--green);background:var(--green-soft)}
+  .badge.go{color:var(--blue);background:var(--blue-soft)}
+  .badge.pay{color:var(--purple);background:var(--purple-soft)}
+  .badge.byok{color:var(--gold);background:var(--gold-soft)}
+
+  .controls{
+    display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:22px;
+  }
+  .search{
+    flex:1;min-width:240px;position:relative;
+  }
+  .search input{
+    width:100%;background:var(--panel);border:1px solid var(--border);
+    color:var(--text);border-radius:10px;padding:11px 14px 11px 40px;font-size:14px;outline:none;
+    font-family:inherit;
+  }
+  .search input:focus{border-color:var(--accent)}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.45}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{
+    background:var(--panel);border:1px solid var(--border);color:var(--muted);
+    font-size:13px;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;transition:.15s;
+    font-family:inherit;
+  }
+  .chip:hover{color:var(--text);border-color:#2e3850}
+  .chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .card{
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:18px;display:flex;flex-direction:column;gap:10px;transition:.18s;
+  }
+  .card:hover{border-color:#2e3850;transform:translateY(-2px)}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .card h4{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
+  .card .id{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .tags{display:flex;gap:6px;flex-wrap:wrap}
+  .tag{
+    font-size:10.5px;font-weight:600;padding:3px 9px;border-radius:6px;
+    background:var(--panel-2);border:1px solid var(--border);color:var(--muted);
+  }
+  .tag.ok{color:var(--green);border-color:rgba(62,207,142,.3);background:var(--green-soft)}
+  .tag.warn{color:var(--gold);border-color:rgba(245,192,78,.3);background:var(--gold-soft)}
+  .tag.bad{color:var(--red);border-color:rgba(240,112,95,.3);background:var(--red-soft)}
+  .card p{font-size:13px;color:var(--muted)}
+  .price-line{font-family:var(--mono);font-size:13px;color:var(--green);font-weight:700}
+
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:var(--panel)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:820px}
+  thead th{
+    text-align:left;padding:12px 16px;font-size:11px;font-weight:700;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);
+    background:var(--panel-2);white-space:nowrap;position:sticky;top:0;
+  }
+  tbody td{padding:11px 16px;border-bottom:1px solid var(--border-soft);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover td{background:rgba(255,255,255,.02)}
+  .m-name{font-weight:650;color:var(--text);white-space:nowrap}
+  .m-id{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+  .num{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+  .num.free-c{color:var(--green);font-weight:700}
+  .prov{font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;white-space:nowrap}
+  .prov.anthropic{color:#d4a27f;background:rgba(212,162,127,.12)}
+  .prov.openai{color:#7fb8d4;background:rgba(127,184,212,.12)}
+  .prov.google{color:#8fa8f5;background:rgba(143,168,245,.12)}
+  .prov.xai{color:#c9c9c9;background:rgba(201,201,201,.1)}
+  .prov.moonshot{color:#9be0c8;background:rgba(155,224,200,.1)}
+  .prov.zai{color:#a7f3d0;background:rgba(167,243,208,.1)}
+  .prov.deepseek{color:#8ab4f8;background:rgba(138,180,248,.1)}
+  .prov.minimax{color:#f0abfc;background:rgba(240,171,252,.1)}
+  .prov.qwen{color:#fca5a5;background:rgba(252,165,165,.1)}
+  .prov.mistral{color:#ffd28a;background:rgba(255,210,138,.1)}
+  .prov.muse{color:#c4b5fd;background:rgba(196,181,253,.1)}
+  .prov.openai-decision{color:#7fb8d4;background:rgba(127,184,212,.12)}
+  .tier-note{font-size:11px;color:var(--muted)}
+
+  .go-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;margin-bottom:26px}
+  .go-card{
+    background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px;
+    display:flex;flex-direction:column;gap:14px;position:relative;
+  }
+  .go-card.plus{border-color:rgba(91,141,239,.45)}
+  .go-card.teams{border-color:rgba(167,139,250,.45)}
+  .go-card .flag{
+    position:absolute;top:-11px;right:16px;font-size:10.5px;font-weight:800;letter-spacing:.06em;
+    text-transform:uppercase;padding:4px 11px;border-radius:999px;
+  }
+  .go-card .flag.best{background:var(--blue);color:#fff}
+  .go-card .flag.team{background:var(--purple);color:#fff}
+  .go-card h3{font-size:19px;font-weight:800}
+  .go-card .amount{font-size:36px;font-weight:800;letter-spacing:-.03em}
+  .go-card .amount small{font-size:14px;font-weight:600;color:var(--muted)}
+  .go-card ul{list-style:none;color:var(--muted);font-size:13.5px;display:grid;gap:8px}
+  .go-card ul li::before{content:"✓ ";color:var(--blue);font-weight:700}
+  .go-card.teams ul li::before{color:var(--purple)}
+
+  .note{
+    background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:10px;padding:14px 18px;font-size:13.5px;color:var(--muted);margin-top:18px;
+  }
+  .note b{color:var(--text)}
+
+  .byok-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+  .byok{
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;
+  }
+  .byok h4{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+  .byok p{font-size:13px;color:var(--muted)}
+
+  footer{
+    border-top:1px solid var(--border-soft);padding:40px 0 56px;
+    color:var(--muted);font-size:13px;
+  }
+  footer .cols{display:flex;gap:40px;flex-wrap:wrap;justify-content:space-between}
+  footer h5{color:var(--text);font-size:13px;margin-bottom:10px}
+  footer ul{list-style:none;display:grid;gap:6px}
+  .disclaimer{margin-top:30px;padding-top:22px;border-top:1px solid var(--border-soft);font-size:12px;color:#6b7488;max-width:900px}
+
+  .empty{display:none;text-align:center;color:var(--muted);padding:40px;font-size:14px}
+  .count{font-size:12.5px;color:var(--muted);margin-left:auto;white-space:nowrap}
+
+  @media(max-width:640px){
+    .nav-links{display:none}
+    .hero{padding:48px 0 36px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top">
+      <span class="logo-mark">op</span>
+      OpenCode&nbsp;Models&nbsp;Hub
+    </a>
+    <nav class="nav-links">
+      <a href="#tiers">Access Tiers</a>
+      <a href="#free">Free Models</a>
+      <a href="#go">Go Subscription</a>
+      <a href="#payg">Pay-as-you-go</a>
+      <a href="#byok">BYOK</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="kicker"><span class="dot"></span> Data verified against opencode.ai docs · Nov 14, 2026</span>
+      <h1>Every OpenCode model,<br><span class="grad">every tier, one page.</span></h1>
+      <p>A complete, searchable catalog of all models available across OpenCode: limited-time <b>free models</b>, the <b>Go &amp; Go Plus</b> subscription lineup, <b>Console pay-as-you-go</b> per-token pricing, and <b>bring-your-own-key</b> access.</p>
+      <div class="stats">
+        <div class="stat f"><b id="stat-free">—</b><span>Free models</span></div>
+        <div class="stat g"><b id="stat-go">—</b><span>Go subscription models</span></div>
+        <div class="stat p"><b id="stat-pay">—</b><span>Pay-as-you-go models</span></div>
+        <div class="stat k"><b id="stat-byok">∞</b><span>Via your own keys</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tiers">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag pay">Overview</span>
+        <h2>Four ways to access models</h2>
+        <p>OpenCode is free, open-source (MIT) software. How you pay for models depends on the route you choose.</p>
+      </div>
+      <div class="tiers">
+        <div class="tier">
+          <h3>Free Models <span class="badge free">Limited time</span></h3>
+          <div class="price" style="color:var(--green)">$0 — no sign-in needed</div>
+          <ul>
+            <li>Built into the OpenCode app (CLI, desktop, IDE)</li>
+            <li>Unpublished daily request limits</li>
+            <li>OpenCode-only — free chat models require OpenCode</li>
+            <li>Hide with OPENCODE_DISABLE_FREE_MODELS=1</li>
+          </ul>
+        </div>
+        <div class="tier">
+          <h3>OpenCode Go <span class="badge go">Subscription</span></h3>
+          <div class="price" style="color:var(--blue)">$10/mo · Go Plus $40/mo · Teams $20/member</div>
+          <ul>
+            <li>Curated open-weight lineup with per-model allowances</li>
+            <li>Works in OpenCode, Claude Code, Codex &amp; Pi</li>
+            <li>Top up credit if you run out, cancel any time</li>
+          </ul>
+        </div>
+        <div class="tier">
+          <h3>Console Pay-as-you-go <span class="badge pay">Per token</span></h3>
+          <div class="price" style="color:var(--purple)">$20 min top-up + ~4.6% + $0.31 fee</div>
+          <ul>
+            <li>Largest catalog — frontier &amp; open-weight models</li>
+            <li>Billed per token from prepaid credit, at cost</li>
+            <li>Budgets, auto-recharge, zero retention by default</li>
+          </ul>
+        </div>
+        <div class="tier">
+          <h3>Bring Your Own Key <span class="badge byok">Provider rates</span></h3>
+          <div class="price" style="color:var(--gold)">No OpenCode fee — provider rates</div>
+          <ul>
+            <li>Any provider: Anthropic, OpenAI, Google, local…</li>
+            <li>Billed directly by the provider</li>
+            <li>Or log in with ChatGPT Plus/Pro, Claude Pro/Max, GitHub Copilot</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="free">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag free">Free · $0</span>
+        <h2>Limited-time free models</h2>
+        <p>Every model currently listed at $0 input, $0 output and $0 cached read on the OpenCode docs. Free-tier chat models require OpenCode and have unpublished daily limits.</p>
+      </div>
+      <div class="controls">
+        <div class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="free-search" placeholder="Search free models…">
+        </div>
+        <div class="chips" id="free-chips"></div>
+        <span class="count" id="free-count"></span>
+      </div>
+      <div class="cards" id="free-cards"></div>
+      <div class="empty" id="free-empty">No free models match your search.</div>
+      <div class="note"><b>Privacy matters:</b> free models differ in data handling — some are zero-retention, some may train on your data, and a few are region-restricted. Check each card's badges before sending sensitive code. <code>OPENCODE_DISABLE_FREE_MODELS=1</code> hides all free models.</div>
+    </div>
+  </section>
+
+  <section class="section" id="go">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag go">Paid subscription</span>
+        <h2>OpenCode Go — models &amp; allowances</h2>
+        <p>A low-cost fixed monthly subscription with generous per-model limits, counted over 5-hour, weekly and monthly windows. When a Go limit is reached you can keep using the free models.</p>
+      </div>
+      <div class="go-cards">
+        <div class="go-card">
+          <h3>Go</h3>
+          <div class="amount">$10<small>/mo</small></div>
+          <ul>
+            <li>12 curated open-weight models</li>
+            <li>Per-model monthly usage allowances</li>
+            <li>Works in OpenCode, Claude Code, Codex, Pi</li>
+            <li>Top up credit · cancel any time</li>
+          </ul>
+        </div>
+        <div class="go-card plus">
+          <span class="flag best">Higher limits</span>
+          <h3>Go Plus</h3>
+          <div class="amount">$40<small>/mo</small></div>
+          <ul>
+            <li>Same 12-model lineup</li>
+            <li>2–4× higher allowances on every model</li>
+            <li>Fewer interruptions for large projects</li>
+            <li>Everything in Go</li>
+          </ul>
+        </div>
+        <div class="go-card teams">
+          <span class="flag team">Per member</span>
+          <h3>Go Teams</h3>
+          <div class="amount">$20<small>/member/mo</small></div>
+          <ul>
+            <li>Each member gets their own limits</li>
+            <li>$5/mo higher than Go on every model</li>
+            <li>Team budgets, policies &amp; SSO controls</li>
+            <li>Everything in Go</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table id="go-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Requests / 5 hr (Go)</th>
+              <th>Requests / 5 hr (Go Plus)</th>
+              <th>Monthly usage (Go)</th>
+              <th>Monthly usage (Go Plus)</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="payg">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag pay">Paid · per token</span>
+        <h2>Console pay-as-you-go pricing</h2>
+        <p>All models billed per token from prepaid credit, sold at provider cost. Prices are US dollars per 1M tokens. Pay-as-you-go models also work from other clients via API key.</p>
+      </div>
+      <div class="controls">
+        <div class="search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="text" id="pay-search" placeholder="Search models (e.g. claude, gemini, kimi)…">
+        </div>
+        <div class="chips" id="pay-chips"></div>
+        <span class="count" id="pay-count"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table id="pay-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Provider</th>
+              <th>Input</th>
+              <th>Output</th>
+              <th>Cache read</th>
+              <th>Cache write</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="empty" id="pay-empty">No models match your search.</div>
+      <div class="note"><b>Hidden fee:</b> credit purchases add a processing fee of ~4.6% + $0.31. Default auto-recharge is $20 when balance drops below $5 (configurable). OpenCode says models are sold at cost.</div>
+    </div>
+  </section>
+
+  <section class="section" id="byok">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-tag byok">Accessible · any plan</span>
+        <h2>Bring your own access</h2>
+        <p>Beyond the OpenCode catalog, OpenCode connects to anything you already have — no OpenCode model fees.</p>
+      </div>
+      <div class="byok-grid">
+        <div class="byok">
+          <h4>🔑 API keys</h4>
+          <p>Plug in any provider key — Anthropic, OpenAI, Google, xAI, Mistral, Groq, local Ollama / LM Studio / vLLM — and pay that provider's normal API rates.</p>
+        </div>
+        <div class="byok">
+          <h4>💬 ChatGPT Plus / Pro</h4>
+          <p>Log in with an existing ChatGPT Plus or Pro subscription to use OpenAI models with that plan's limits and billing.</p>
+        </div>
+        <div class="byok">
+          <h4>🟣 Claude Pro / Max</h4>
+          <p>Use a Claude Pro or Max subscription. Since v2.2.3 OpenCode also ships a built-in Claude Agent provider that runs on your Claude Code login.</p>
+        </div>
+        <div class="byok">
+          <h4>🐙 GitHub Copilot</h4>
+          <p>Authenticate with your existing GitHub Copilot subscription and access Copilot-enabled models inside OpenCode.</p>
+        </div>
+        <div class="byok">
+          <h4>🏠 Local models</h4>
+          <p>Run Ollama, LM Studio or vLLM locally — $0 plus your own hardware, fully private, no rate limits beyond your GPU.</p>
+        </div>
+        <div class="byok">
+          <h4>🏢 Teams &amp; Enterprise</h4>
+          <p>Workspace owners can connect their own providers for the whole team, with budgets, policies, SSO and per-member spend caps.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h5>OpenCode Models Hub</h5>
+        <ul>
+          <li><a href="#free">Free models</a></li>
+          <li><a href="#go">Go subscription</a></li>
+          <li><a href="#payg">Pay-as-you-go</a></li>
+          <li><a href="#byok">BYOK</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Official sources</h5>
+        <ul>
+          <li><a href="https://opencode.ai/docs/console/models/" target="_blank" rel="noopener">Model docs &amp; pricing</a></li>
+          <li><a href="https://opencode.ai/console/go" target="_blank" rel="noopener">OpenCode Go</a></li>
+          <li><a href="https://opencode.ai/console/models" target="_blank" rel="noopener">Console models</a></li>
+          <li><a href="https://opencode.ai" target="_blank" rel="noopener">opencode.ai</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="disclaimer">
+      This is an independent community catalog, not affiliated with Anomaly / OpenCode. Model availability, free periods and prices change frequently — free models are marked "limited time" and several carry promotional discounts (marked 50% off) or expire. Verify current pricing at opencode.ai/docs/console/models before purchase. Data collected Nov 14, 2026.
+    </p>
+  </div>
+</footer>
+
+<script>
+const freeModels = [
+  {name:"Big Pickle", id:"big-pickle", tags:["Stealth","Feedback period"], priv:"warn",
+   privLabel:"May train on data",
+   desc:"Stealth model free on OpenCode for a limited time. The team is using this period to collect feedback and improve the model."},
+  {name:"Iceman Free", id:"iceman-free", tags:["Stealth","Feedback period"], priv:"warn",
+   privLabel:"Stealth model",
+   desc:"Stealth model free on OpenCode for a limited time. The team is using this period to collect feedback and improve the model."},
+  {name:"Pulse Alpha Free", id:"pulse-alpha-free", tags:["Stealth","Nov 2, 2026","1M context"], priv:"bad",
+   privLabel:"Data may be retained & trained on",
+   desc:"Stealth model added Nov 2, 2026 with a 1,048,576-token context window, image input and tool calling. During its free period data may be retained and used to improve the model. Not available in the EU and several other regions."},
+  {name:"Inkling 2 Small Free", id:"inkling-2-small-free", tags:["Feedback period"], priv:"bad",
+   privLabel:"Provider retains & trains on data",
+   desc:"Free for a limited time. Its provider retains your data and may use it for model training. Not available in the EU, Iceland, Liechtenstein, Norway, Cuba, Iran, North Korea, Russia, Ukraine or Venezuela."},
+  {name:"GLM-5.3-Flash Free", id:"glm-5.3-flash-free", tags:["Zero retention"], priv:"ok",
+   privLabel:"Zero retention · no training",
+   desc:"Free on OpenCode for a limited time. Its provider follows a zero-retention policy and does not use your data for model training."},
+  {name:"DeepSeek V4.1 Flash Free", id:"deepseek-v4.1-flash-free", tags:["Zero retention"], priv:"ok",
+   privLabel:"Zero retention · no training",
+   desc:"Free on OpenCode for a limited time. Its provider follows a zero-retention policy and does not use your data for model training."},
+  {name:"MiniMax M3.1 Flash Free", id:"minimax-m3.1-flash-free", tags:["Zero retention"], priv:"ok",
+   privLabel:"Zero retention · no training",
+   desc:"Free on OpenCode for a limited time. Its provider follows a zero-retention policy and does not use your data for model training."},
+  {name:"Beam Free", id:"beam-free", tags:["30-day retention","Region restricted"], priv:"warn",
+   privLabel:"No training · 30-day retention",
+   desc:"Free for a limited time. Provider does not train on your data and retains it 30 days for safety. Unavailable in ~20 countries including China, Russia, Iran, Belarus and Ukraine's Crimea/DNR/LNR regions."},
+  {name:"Flint 40B Free", id:"flint-40b-free", tags:["Feedback period"], priv:"warn",
+   privLabel:"May improve model · 30-day retention",
+   desc:"Free on OpenCode for a limited time. The team is using this period to collect feedback and improve the model."},
+  {name:"LongCat 2.5 Free", id:"longcat-2.5-free", tags:["100 req/day","Zero retention","Hosted in China"], priv:"ok",
+   privLabel:"Zero retention · no training · 100 req/day",
+   desc:"Free for a limited time with a limit of 100 requests per day. Provider follows a zero-retention policy and does not train on your data. Hosted in China."},
+  {name:"MiMo-V2.6-Flash Free", id:"mimo-v2.6-flash-free", tags:["Feedback period"], priv:"warn",
+   privLabel:"May improve model",
+   desc:"Available on OpenCode for a limited time. The team is using this time to collect feedback and improve the model."},
+  {name:"Nemotron 3 Ultra Free", id:"nemotron-3-ultra-free", tags:["NVIDIA trial"], priv:"bad",
+   privLabel:"Trial endpoint — logged use",
+   desc:"NVIDIA trial endpoint available for a limited time; the team is collecting feedback. Do not submit personal or confidential data — use is logged."},
+  {name:"Nemotron 3.5 Lightning Free", id:"nemotron-3.5-lightning-free", tags:["NVIDIA trial"], priv:"bad",
+   privLabel:"Trial endpoint — logged use",
+   desc:"NVIDIA trial endpoint available for a limited time; the team is collecting feedback. Do not submit personal or confidential data — use is logged."},
+  {name:"Nemotron 3.5 Super VL Free", id:"nemotron-3.5-super-vl-free", tags:["NVIDIA trial"], priv:"bad",
+   privLabel:"Trial endpoint — logged use",
+   desc:"NVIDIA trial endpoint available for a limited time; the team is collecting feedback. Do not submit personal or confidential data — use is logged."},
+  {name:"Jev 1.13 Free", id:"jev-1.13-free", tags:["Feedback period"], priv:"warn",
+   privLabel:"Limited time",
+   desc:"Available on OpenCode for a limited time. The paid Jev 1.13 variant costs $0.042 input per 1M tokens with free output."}
+];
+
+const goModels = [
+  {name:"Kimi K3", reqGo:110, reqPlus:440, mGo:15, mPlus:60, notes:""},
+  {name:"Kimi K3.1 Pro", reqGo:147, reqPlus:588, mGo:15, mPlus:60, notes:""},
+  {name:"DeepSeek V4 Pro", reqGo:1050, reqPlus:4200, mGo:15, mPlus:60, notes:""},
+  {name:"Hy4 New", reqGo:2710, reqPlus:10840, mGo:60, mPlus:240, notes:""},
+  {name:"Claude Haiku 5.5", reqGo:3850, reqPlus:15380, mGo:15, mPlus:60, notes:"30-day data retention"},
+  {name:"MiniMax M3.1 Flash", reqGo:3880, reqPlus:15500, mGo:20, mPlus:80, notes:""},
+  {name:"GPT 6 Luna", reqGo:4230, reqPlus:16920, mGo:15, mPlus:60, notes:"30-day data retention"},
+  {name:"Qwen3.7 Plus", reqGo:4300, reqPlus:12900, mGo:60, mPlus:180, notes:""},
+  {name:"GLM-5.3-Flash", reqGo:6320, reqPlus:18960, mGo:60, mPlus:180, notes:""},
+  {name:"MiMo-V2.6-Flash", reqGo:30100, reqPlus:60200, mGo:60, mPlus:120, notes:""},
+  {name:"DeepSeek V4.1 Flash", reqGo:43330, reqPlus:86670, mGo:100, mPlus:200, notes:""},
+  {name:"Muse Spark 1.3 Contributor", reqGo:45300, reqPlus:90600, mGo:60, mPlus:120, notes:"Used for training · limited regions"}
+];
+
+const payModels = [
+  ["Claude Fable 5.2","anthropic",8.00,40.00,0.20,10.00],
+  ["Claude Fable 5.1","anthropic",10.00,50.00,0.25,12.50],
+  ["Claude Fable 5","anthropic",10.00,50.00,1.00,12.50],
+  ["Claude Opus 5.5","anthropic",4.00,20.00,0.20,5.00],
+  ["Claude Opus 5","anthropic",5.00,25.00,0.50,6.25],
+  ["Claude Opus 4.8","anthropic",5.00,25.00,0.50,6.25],
+  ["Claude Opus 4.7","anthropic",5.00,25.00,0.50,6.25],
+  ["Claude Opus 4.6","anthropic",5.00,25.00,0.50,6.25],
+  ["Claude Opus 4.5","anthropic",5.00,25.00,0.50,6.25],
+  ["Claude Sonnet 5.5","anthropic",2.00,10.00,0.10,2.50],
+  ["Claude Sonnet 5","anthropic",2.00,10.00,0.20,2.50],
+  ["Claude Sonnet 4.6","anthropic",3.00,15.00,0.30,3.75],
+  ["Claude Sonnet 4.5 (≤ 200K tokens)","anthropic",3.00,15.00,0.30,3.75],
+  ["Claude Sonnet 4.5 (> 200K tokens)","anthropic",6.00,22.50,0.60,7.50],
+  ["Claude Haiku 5.5 (≤ 100K tokens)","anthropic",0.10,0.50,0.01,0.125],
+  ["Claude Haiku 5.5 (> 100K tokens)","anthropic",0.50,2.50,0.05,0.625],
+  ["Claude Haiku 4.5","anthropic",1.00,5.00,0.10,1.25],
+  ["GPT 6 Astra (≤ 272K tokens)","openai",10.00,50.00,1.00,12.50],
+  ["GPT 6 Astra (> 272K tokens)","openai",20.00,75.00,2.00,25.00],
+  ["GPT 6 Sol (≤ 272K tokens)","openai",2.00,10.00,0.20,2.50],
+  ["GPT 6 Sol (> 272K tokens)","openai",4.00,15.00,0.40,5.00],
+  ["GPT 6 Luna Decision (≤ 272K tokens)","openai-decision",0.10,"Free",0.01,0.125],
+  ["GPT 6 Luna Decision (> 272K tokens)","openai-decision",0.20,"Free",0.02,0.25],
+  ["GPT 6.1 Sol","openai",2.00,10.00,0.10,2.50],
+  ["GPT 5.5","openai",5.00,30.00,0.50,null],
+  ["GPT 5.5 Pro","openai",30.00,180.00,30.00,null],
+  ["GPT 5.6 Terra","openai",2.00,12.00,0.20,2.50],
+  ["GPT 5.4 Mini","openai",0.75,4.50,0.075,null],
+  ["GPT 5.4 Nano","openai",0.20,1.25,0.02,null],
+  ["GPT 5.3 Codex","openai",1.75,14.00,0.175,null],
+  ["GPT 5.3 Codex Spark","openai",1.75,14.00,0.175,null],
+  ["Gemini Decision 1","openai-decision",0.10,"Free",null,null],
+  ["Jev 1.13","openai-decision",0.042,"Free",null,null],
+  ["Gemini 4 Carbon (50% off)","google",2.00,10.00,0.10,null],
+  ["Gemini 4 Argon (50% off)","google",2.00,10.00,0.10,null],
+  ["Gemini 4 Hydrogen","google",1.50,7.50,0.075,null],
+  ["Gemini 3.8 Flash (50% off)","google",0.75,3.75,0.075,null],
+  ["Gemini 3.7 Flash (50% off)","google",0.75,3.75,0.075,null],
+  ["Gemini 3.6 Flash (50% off)","google",0.75,3.75,0.075,null],
+  ["Gemini 3.5 Flash","google",1.50,9.00,0.15,null],
+  ["Gemini 3.5 Flash Lite","google",0.30,2.50,0.03,null],
+  ["Gemini 3.1 Pro (≤ 200K tokens)","google",2.00,12.00,0.20,null],
+  ["Gemini 3.1 Pro (> 200K tokens)","google",4.00,18.00,0.40,null],
+  ["Gemini 3 Flash","google",0.50,3.00,0.05,null],
+  ["Grok 4.7 (≤ 200K tokens)","xai",2.00,6.00,0.50,null],
+  ["Grok 4.7 (> 200K tokens)","xai",4.00,12.00,1.00,null],
+  ["Grok 4.6 (≤ 200K tokens)","xai",2.00,6.00,0.50,null],
+  ["Grok 4.6 (> 200K tokens)","xai",4.00,12.00,1.00,null],
+  ["Grok 4.5 (≤ 200K tokens)","xai",2.00,6.00,0.30,null],
+  ["Grok 4.5 (> 200K tokens)","xai",4.00,12.00,0.60,null],
+  ["Grok Build 0.1","xai",1.00,2.00,0.20,null],
+  ["Kimi K3","moonshot",3.00,15.00,0.30,3.00],
+  ["Kimi K2.7 Code","moonshot",0.95,4.00,0.19,null],
+  ["Kimi K2.6","moonshot",0.95,4.00,0.16,null],
+  ["Kimi K2.5","moonshot",0.60,3.00,0.10,null],
+  ["GLM 5.3","zai",1.40,4.40,0.26,null],
+  ["GLM 5.3 Flash","zai",0.15,0.50,0.03,null],
+  ["GLM 5.2","zai",1.40,4.40,0.26,null],
+  ["GLM 5.1","zai",1.40,4.40,0.26,null],
+  ["GLM 5","zai",1.00,3.20,0.20,null],
+  ["DeepSeek V4.1 Flash","deepseek",0.30,1.20,0.006,null],
+  ["DeepSeek V4 Pro","deepseek",1.74,3.48,0.145,null],
+  ["MiniMax M3","minimax",0.30,1.20,0.06,null],
+  ["MiniMax M2.7","minimax",0.30,1.20,0.06,null],
+  ["MiniMax M2.5","minimax",0.30,1.20,0.06,null],
+  ["Qwen3.8 Max","qwen",2.00,6.00,0.25,2.50],
+  ["Qwen3.8 Flash","qwen",0.15,0.47,0.016,0.20],
+  ["Qwen3.6 Plus","qwen",0.50,3.00,0.05,0.625],
+  ["Qwen3.5 Plus","qwen",0.20,1.20,0.02,0.25],
+  ["Mistral Large 4 (50% off)","mistral",0.68,2.09,0.07,null],
+  ["Muse Wonder 1.0","muse",4.00,20.00,0.20,null],
+  ["Muse Ember 1.0 (≤ 200K tokens)","muse",0.10,0.50,0.004,null],
+  ["Muse Ember 1.0 (> 200K tokens)","muse",0.30,1.50,0.012,null],
+  ["Muse Spark 1.3","muse",1.25,4.25,0.15,null],
+  ["Muse Spark 1.2","muse",1.25,4.25,0.15,null]
+];
+
+const provNames = {
+  anthropic:"Anthropic", openai:"OpenAI", google:"Google", xai:"xAI",
+  moonshot:"Moonshot AI", zai:"Z.ai", deepseek:"DeepSeek", minimax:"MiniMax",
+  qwen:"Qwen", mistral:"Mistral", muse:"Muse", "openai-decision":"OpenAI (decision)"
+};
+const provOrder = ["all","anthropic","openai","google","xai","moonshot","zai","deepseek","minimax","qwen","mistral","muse"];
+
+function fmt(v){
+  if(v === null || v === undefined) return "—";
+  if(v === "Free") return '<span class="num free-c">Free</span>';
+  return "$" + (v < 0.01 ? v.toFixed(3) : v.toFixed(v % 1 === 0 ? 2 : (v < 1 ? 3 : 2)));
+}
+
+const freeCards = document.getElementById("free-cards");
+const freeCount = document.getElementById("free-count");
+function renderFree(filter, tag){
+  const f = (filter||"").toLowerCase();
+  let shown = 0;
+  freeCards.innerHTML = "";
+  freeModels.forEach(m => {
+    if(f && !(m.name.toLowerCase().includes(f) || m.id.includes(f) || m.desc.toLowerCase().includes(f))) return;
+    if(tag && tag !== "all" && !m.tags.some(t => t.toLowerCase().includes(tag))) return;
+    shown++;
+    const el = document.createElement("div");
+    el.className = "card";
+    el.innerHTML =
+      '<div class="card-top"><div><h4>'+m.name+'</h4><span class="id">'+m.id+'</span></div>' +
+      '<span class="price-line">$0</span></div>' +
+      '<div class="tags">'+m.tags.map(t=>'<span class="tag">'+t+'</span>').join("") +
+      '<span class="tag '+m.priv+'">'+m.privLabel+'</span></div>' +
+      '<p>'+m.desc+'</p>';
+    freeCards.appendChild(el);
+  });
+  freeCount.textContent = shown + " of " + freeModels.length + " shown";
+  document.getElementById("free-empty").style.display = shown ? "none" : "block";
+}
+let freeTag = "all";
+document.getElementById("free-search").addEventListener("input", e => renderFree(e.target.value, freeTag));
+(function(){
+  const chips = document.getElementById("free-chips");
+  ["all","zero retention","stealth","nvidia trial","region restricted","feedback period"].forEach(t => {
+    const b = document.createElement("button");
+    b.className = "chip" + (t === "all" ? " active" : "");
+    b.textContent = t === "all" ? "All" : t.replace(/\b\w/g, c => c.toUpperCase());
+    b.onclick = () => {
+      freeTag = t;
+      chips.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      b.classList.add("active");
+      renderFree(document.getElementById("free-search").value, freeTag);
+    };
+    chips.appendChild(b);
+  });
+})();
+
+const goBody = document.querySelector("#go-table tbody");
+goModels.forEach(m => {
+  const tr = document.createElement("tr");
+  tr.innerHTML =
+    '<td><span class="m-name">'+m.name+'</span></td>' +
+    '<td><span class="num">'+m.reqGo.toLocaleString()+'</span></td>' +
+    '<td><span class="num">'+m.reqPlus.toLocaleString()+'</span></td>' +
+    '<td><span class="num">$'+m.mGo+'</span></td>' +
+    '<td><span class="num">$'+m.mPlus+'</span></td>' +
+    '<td>'+(m.notes?'<span class="tier-note">'+m.notes+'</span>':'—')+'</td>';
+  goBody.appendChild(tr);
+});
+
+const payBody = document.querySelector("#pay-table tbody");
+const payCount = document.getElementById("pay-count");
+function renderPay(filter, prov){
+  const f = (filter||"").toLowerCase();
+  let shown = 0;
+  payBody.innerHTML = "";
+  payModels.forEach(p => {
+    const [name, provKey, i, o, cr, cw] = p;
+    if(prov && prov !== "all" && provKey !== prov) return;
+    if(f && !(name.toLowerCase().includes(f) || provNames[provKey].toLowerCase().includes(f))) return;
+    shown++;
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      '<td><span class="m-name">'+name+'</span></td>' +
+      '<td><span class="prov '+provKey+'">'+provNames[provKey]+'</span></td>' +
+      '<td><span class="num">'+fmt(i)+'</span></td>' +
+      '<td><span class="num">'+fmt(o)+'</span></td>' +
+      '<td><span class="num">'+fmt(cr)+'</span></td>' +
+      '<td><span class="num">'+fmt(cw)+'</span></td>';
+    payBody.appendChild(tr);
+  });
+  payCount.textContent = shown + " of " + payModels.length + " shown";
+  document.getElementById("pay-empty").style.display = shown ? "none" : "block";
+}
+let payProv = "all";
+document.getElementById("pay-search").addEventListener("input", e => renderPay(e.target.value, payProv));
+(function(){
+  const chips = document.getElementById("pay-chips");
+  provOrder.forEach(p => {
+    const b = document.createElement("button");
+    b.className = "chip" + (p === "all" ? " active" : "");
+    b.textContent = p === "all" ? "All providers" : provNames[p];
+    b.onclick = () => {
+      payProv = p;
+      chips.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      b.classList.add("active");
+      renderPay(document.getElementById("pay-search").value, payProv);
+    };
+    chips.appendChild(b);
+  });
+})();
+
+document.getElementById("stat-free").textContent = freeModels.length;
+document.getElementById("stat-go").textContent = goModels.length;
+document.getElementById("stat-pay").textContent = payModels.length;
+
+renderFree("", "all");
+renderPay("", "all");
+</script>
+
+</body>
+</html>
