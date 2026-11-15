@@ -1,4 +1,4 @@
-# DARK_MATTER_TRACE_V3
+# DARK_MATTER_TRACE_V5
 name: Dark Matter Cloud Agent
 
 on:
@@ -33,6 +33,11 @@ on:
         required: false
         default: 'direct'
         type: string
+      keep_alive_minutes:
+        description: 'Runner timeout/keep-alive window in minutes (360 for public, 40 for private)'
+        required: false
+        default: '360'
+        type: string
   issue_comment:
     types: [created]
 
@@ -46,7 +51,7 @@ jobs:
   opencode-mobile:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: ${{ fromJSON(inputs.keep_alive_minutes || '360') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -59,15 +64,104 @@ jobs:
         id: cache-opencode
         uses: actions/cache@v4
         with:
-          path: ~/.opencode-cli
-          key: ${{ runner.os }}-opencode-cli-v1
+          path: |
+            ~/.opencode-cli
+            ~/.local/share/opencode
+            ~/.cache/opencode
+          key: ${{ runner.os }}-opencode-cli-v2
+          restore-keys: |
+            ${{ runner.os }}-opencode-cli-
 
       - name: Prepare OpenCode CLI
         run: |
-          mkdir -p "$HOME/.opencode-cli"
+          mkdir -p "$HOME/.opencode-cli/node_modules/.bin"
           if [ ! -x "$HOME/.opencode-cli/node_modules/.bin/opencode" ]; then
             npm install --prefix "$HOME/.opencode-cli" --no-save --silent opencode-ai@latest
           fi
+          cat << 'WEBSEARCH_EOF' > "$HOME/.opencode-cli/node_modules/.bin/dm-websearch"
+          #!/usr/bin/env node
+          const https = require('https');
+          const q = process.argv.slice(2).join(' ').trim();
+          if (!q) {
+            console.log('Usage: dm-websearch "<search query or https://url>"');
+            process.exit(0);
+          }
+          function get(url, headers = {}) {
+            return new Promise((resolve) => {
+              const req = https.get(url, {
+                headers: Object.assign({
+                  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36',
+                  'Accept': 'text/html,application/json;q=0.9,*/*;q=0.8'
+                }, headers),
+                timeout: 8000
+              }, (res) => {
+                if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+                  const next = res.headers.location.startsWith('http')
+                    ? res.headers.location
+                    : new URL(res.headers.location, url).toString();
+                  resolve(get(next, headers));
+                  return;
+                }
+                let data = '';
+                res.on('data', (c) => { if (data.length < 220000) data += c; });
+                res.on('end', () => resolve(data));
+              });
+              req.on('error', () => resolve(''));
+              req.on('timeout', () => { req.destroy(); resolve(''); });
+            });
+          }
+          function stripHtml(html) {
+            return String(html || '')
+              .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+              .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+              .replace(/<[^>]+>/g, ' ')
+              .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&nbsp;/g, ' ')
+              .replace(/\s+/g, ' ')
+              .trim();
+          }
+          (async () => {
+            if (/^https?:\/\//i.test(q)) {
+              const raw = await get(q);
+              console.log('URL: ' + q + '\n\n' + stripHtml(raw).slice(0, 7000));
+              return;
+            }
+            const ddgUrl = 'https://html.duckduckgo.com/html/?q=' + encodeURIComponent(q);
+            const html = await get(ddgUrl);
+            const results = [];
+            const re = /<a[^>]+class="[^"]*result__a[^"]*"[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?(?:<a[^>]+class="[^"]*result__snippet[^"]*"[^>]*>([\s\S]*?)<\/a>|<div[^>]+class="[^"]*result__snippet[^"]*"[^>]*>([\s\S]*?)<\/div>)/gi;
+            let m;
+            while ((m = re.exec(html)) && results.length < 6) {
+              let link = m[1] || '';
+              const uddg = link.match(/[?&]uddg=([^&]+)/);
+              if (uddg) link = decodeURIComponent(uddg[1]);
+              const title = stripHtml(m[2]);
+              const snippet = stripHtml(m[3] || m[4] || '');
+              if (title && link) results.push({ title, url: link, snippet });
+            }
+            if (results.length === 0) {
+              const wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=' + encodeURIComponent(q) + '&utf8=&format=json&srlimit=5';
+              const wikiRaw = await get(wikiUrl);
+              try {
+                const j = JSON.parse(wikiRaw);
+                for (const item of (j.query && j.query.search) || []) {
+                  results.push({
+                    title: item.title,
+                    url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(item.title.replace(/ /g, '_')),
+                    snippet: stripHtml(item.snippet || '')
+                  });
+                }
+              } catch {}
+            }
+            if (results.length === 0) {
+              console.log('No direct web matches found for: ' + q);
+            } else {
+              results.forEach((r, i) => {
+                console.log((i + 1) + '. ' + r.title + '\n   URL: ' + r.url + '\n   ' + r.snippet + '\n');
+              });
+            }
+          })();
+          WEBSEARCH_EOF
+          chmod +x "$HOME/.opencode-cli/node_modules/.bin/dm-websearch"
           echo "$HOME/.opencode-cli/node_modules/.bin" >> "$GITHUB_PATH"
           git config user.name "Dark Matter Agent"
           git config user.email "dark-matter-agent[bot]@users.noreply.github.com"
@@ -94,8 +188,8 @@ jobs:
           TRACE_B64_FILE="/tmp/opencode_trace.b64"
 
           if [ "$AGENT_MODE" = "plan" ]; then
-            printf '{"permission":{"*":"deny","read":"allow","glob":"allow","grep":"allow","list":"allow"}}' > /tmp/dark-matter-opencode.json
-            export OPENCODE_PERMISSION='{"*":"deny","read":"allow","glob":"allow","grep":"allow","list":"allow"}'
+            printf '{"permission":{"*":"deny","read":"allow","glob":"allow","grep":"allow","list":"allow","webfetch":"allow","websearch":"allow","fetch":"allow","search":"allow","bash":"allow"}}' > /tmp/dark-matter-opencode.json
+            export OPENCODE_PERMISSION='{"*":"deny","read":"allow","glob":"allow","grep":"allow","list":"allow","webfetch":"allow","websearch":"allow","fetch":"allow","search":"allow","bash":"allow"}'
             INSTRUCTIONS="$TASK_PROMPT"
           else
             printf '{"permission":"allow"}' > /tmp/dark-matter-opencode.json
@@ -202,7 +296,14 @@ jobs:
             const name = String(nameRaw || '').toLowerCase();
             const inp = inputObj && typeof inputObj === 'object' ? inputObj : {};
             const path = inp.filePath || inp.path || inp.file || inp.target || '';
-            if (name.includes('read') || name === 'view_file' || name === 'cat') {
+            if (name.includes('webfetch') || name.includes('websearch') || name.includes('web_search') || name.includes('search_web') || name === 'fetch') {
+              const target = inp.url || inp.query || inp.q || inp.prompt || path || '';
+              if (target) {
+                const cleanTarget = String(target).slice(0, 100);
+                searches.add('web: ' + cleanTarget);
+                addStep('Searched web: ' + cleanTarget.slice(0, 72));
+              }
+            } else if (name.includes('read') || name === 'view_file' || name === 'cat') {
               if (path) {
                 reads.add(String(path));
                 addStep('Read ' + shortPath(path));
@@ -218,7 +319,14 @@ jobs:
               if (cmd) {
                 const line = String(cmd).split('\n')[0].slice(0, 120);
                 shell.add(line);
-                addStep('Executed shell: ' + line.slice(0, 72));
+                const dmMatch = line.match(/dm-websearch\s+["']?([^"'\n]+)["']?/i);
+                if (dmMatch && dmMatch[1]) {
+                  const wq = dmMatch[1].trim().slice(0, 90);
+                  searches.add('web: ' + wq);
+                  addStep('Searched web: ' + wq.slice(0, 72));
+                } else {
+                  addStep('Executed shell: ' + line.slice(0, 72));
+                }
               }
             } else if (name.includes('grep') || name.includes('glob') || name.includes('find') || name.includes('list')) {
               const q = inp.pattern || inp.query || inp.glob || inp.path || '';
